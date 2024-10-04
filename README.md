@@ -5,7 +5,7 @@ I have written these tests (just one as of now) for my [own gameboy emulator](ht
 > I have written these to be used on an emulator, altough these should also work on hardware, I will not be responsible for the damage it might cause
 
 # Tests
-- `sprite-scroll-x`, this one puts a sprite in the middle of the screen, and after every vblank interrupt, moves the sprite by one pixel.
+- `sprite-scroll-x`, this one put three sprites on the screen, all of them should scroll by one pixel after every frame (using vblank interrupts), they are divided in two rows, one by itself, and two in a row
 
 # Building
 To build a test run `./build.sh testname`, for example, `./build.sh sprite-scroll-x`. To clean generated files except the rom, run `./build.sh clean`.  

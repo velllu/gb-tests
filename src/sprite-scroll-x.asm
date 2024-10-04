@@ -5,6 +5,7 @@ DEF rLCDC EQU $FF40
 DEF rOBP0 EQU $FF48
 DEF rIE EQU $FFFF
 DEF rIF EQU $FF0F
+DEF rDMA EQU $FF46
 DEF OAMRAM EQU $FE00
 
 section "VBlank Interrupt", rom0[$40]
@@ -97,24 +98,11 @@ Main:
     ld bc, TilesEnd
     call LoadArea
 
-    ; Now we load the sprite
-    ld hl, OAMRAM
-    
-    ; Y Position
-    ld a, 160 / 2
-    ld [hl+], a
-
-    ; X Position
-    ld a, 8
-    ld [hl+], a
-
-    ; Tile number
-    ld a, 1
-    ld [hl+], a
-
-    ; Attributes
-    ld a, 0
-    ld [hl+], a
+    ; We load sprites in OAM
+    ld hl, $FE00
+    ld de, SpriteData
+    ld bc, SpriteDataEnd
+    call LoadArea
 
     ; Set the palette
     ld a, %11100100
@@ -145,7 +133,37 @@ VBlank:
     add a, b
     ld [hl], a
 
+    ld hl, OAMRAM + 5
+    ld a, [hl]
+    add a, b
+    ld [hl], a
+
+    ld hl, OAMRAM + 9
+    ld a, [hl]
+    add a, b
+    ld [hl], a
+
     reti
+
+SpriteData:
+    ; Sprite 1
+    db 160 / 2 ; Y
+    db 0       ; X
+    db 1       ; Tile number
+    db 0       ; Attributes
+
+    ; Sprite 2
+    db 160 / 2 + 16 ; Y
+    db 0            ; X
+    db 1            ; Tile number
+    db 0            ; Attributes
+
+    ; Sprite 3, the one next to Sprite 2
+    db 160 / 2 + 16 ; Y
+    db 8            ; X
+    db 1            ; Tile number
+    db 0            ; Attributes
+SpriteDataEnd:
 
 section "Tile data", rom0
 Tiles:
